@@ -11,7 +11,7 @@ const userRoute = express.Router();
 
 userRoute.post('/signup', validateUser(userSchema), signUp); 
 userRoute.post('/signin', validateLogin (loginSchema), login); 
-userRoute.get('/users/me'); //get
+userRoute.get('/users/me');
 
 
 
