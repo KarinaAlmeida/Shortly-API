@@ -54,7 +54,7 @@ async function login (req,res){
             `, [id, token]);
             
             }
-            return res.status(200).send(token);
+            return res.status(200).send({token});
 
     
         } catch (err) {
