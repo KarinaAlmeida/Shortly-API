@@ -1,5 +1,5 @@
 import {db} from "../database/database.connection.js";
-import { nanoid } from 'nanoid'
+import { customAlphabet } from 'nanoid'
 
 async function shorten (req, res) {
     const userId= res.locals.id;
@@ -7,10 +7,11 @@ async function shorten (req, res) {
 
 
     try {
-        const short = nanoid(6); 
-
+       
+        const nanoid = customAlphabet("abcdefghijklmnopqrstuvxywz1234567890", 6)
+        const short= nanoid()
         const urlId = await db.query (`INSERT INTO url (url, "userId", short) VALUES ($1, $2, $3) RETURNING id;`, [url, userId, short])
-        
+       
 
         res.status(201).send({id: urlId.rows[0].id, shortUrl:short})
     } catch (error) {
@@ -41,4 +42,22 @@ async function getUrlId (req, res) {
 
 }
 
-export {shorten, getUrlId}
+async function open (req, res) {
+    const short= req.params.shortUrl
+
+    try {
+        const urlOriginal= await db.query( `SELECT * FROM url WHERE short=$1;`, [short])
+        if (urlOriginal.rowCount === 0) return res.status(404).send("ops, Url não encontrada!")
+        
+        const visita = urlOriginal.rows[0].visitCount +1
+        await db.query( `UPDATE url SET "visitCount"= $1 WHERE short=$2;`, [visita, short] )
+
+       res.redirect(urlOriginal.rows[0].url)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error.message)
+    }
+}
+
+export {shorten, getUrlId, open}
