@@ -61,13 +61,24 @@ async function open (req, res) {
 }
 
 async function deleteUrl (req, res) {
+    const userId= res.locals.id;
     const id = req.params.id;
 
     try {
+
+        const urlSelec = await db.query(`SELECT * FROM url WHERE id=$1;`, [id]);
+
+        if (urlSelec.rowCount === 0) return res.status(404).send("Epa! Não encontramos essa URL!")
+
+        if(userId !== urlSelec.rows[0].userId) {
+            return res.status(401).send("Essa URL não te pertence, colega! Não pode deletá-la!")
+
+        }else{
         await db.query(`
             DELETE FROM url WHERE id = $1`, [id]);
+        }
 
-        return res.sendStatus(204);
+        return res.status(204).send("URL deletada!");
        
 
     } catch (error) {
