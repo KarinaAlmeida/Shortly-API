@@ -102,4 +102,25 @@ async function userMe (req, res) {
 
     }
 }
-export {signUp, login, userMe}
+
+async function rank (req, res) {
+    try {
+        const rankeada = await db.query (` SELECT users.id, users.name,
+        COUNT (url.url) AS "linksCount",
+        SUM (url."visitCount") AS "visitCount"
+        FROM url
+        LEFT JOIN users ON url."userId" = users.id
+        GROUP BY users.id, url."userId", users.name
+        ORDER BY "visitCount" DESC
+        LIMIT 10;` )
+        
+
+        return res.status(200).send(rankeada.rows);
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error.message)
+    }
+}
+
+export {signUp, login, userMe, rank}

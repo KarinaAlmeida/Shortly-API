@@ -1,5 +1,5 @@
 import express from "express";
-import {login, signUp, userMe} from "../controllers/users.controllers.js";
+import {login, signUp, userMe, rank} from "../controllers/users.controllers.js";
 import validateUser from "../middlewares/validateUser.js";
 import {userSchema}  from "../schemas/usersSchema.js";
 import validateLogin from "../middlewares/validateLogin.js";
@@ -11,7 +11,7 @@ const userRoute = express.Router();
 userRoute.post('/signup', validateUser(userSchema), signUp); 
 userRoute.post('/signin', validateLogin (loginSchema), login); 
 userRoute.get('/users/me', validateAuth(), userMe);
-userRoute.get('/ranking');
+userRoute.get('/ranking', rank);
 
 
 
