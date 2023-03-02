@@ -65,17 +65,18 @@ async function login (req,res){
 
 async function userMe (req, res) {
     const userId= res.locals.id;
-
+    
     try {
         const urls = await db.query(`
         SELECT url.id, url.short, url.url, url."visitCount"
         FROM url 
-        WHERE userId = $1;`, [userId]);
+        WHERE "userId" = $1;`, [userId]);
+        console.log(urls)
 
-        const visitCountTotal = await db.query(`SELECT SUM("visitCount") 
-        AS visitTotal 
+        const visitCountTotal = await db.query(`SELECT SUM ("visitCount") 
+        AS visit 
         FROM url
-        WHERE userId = $1;`, [userId])
+        WHERE "userId" = $1;`, [userId])
 
         const usuario = await db.query(`SELECT * 
         FROM users 
@@ -84,7 +85,7 @@ async function userMe (req, res) {
         return res.status(200).send({
             id: usuario.rows[0].id,
             name: usuario.rows[0].name,
-            visitCount: visitCountTotal.rows[0].visitTotal,
+            visitCount: visitCountTotal.rows[0].visit,
             shortenedUrls: urls.rows                            
         })
         
