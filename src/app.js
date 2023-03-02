@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 // import {db} from "./database/database.connection.js";
 import userRoute from "./routes/user.route.js";
 import urlRoute from "./routes/url.route.js";
-import rankingRoute from "./routes/ranking.route.js";
 
 
 dotenv.config();
