@@ -71,7 +71,15 @@ async function userMe (req, res) {
         SELECT url.id, url.short, url.url, url."visitCount"
         FROM url 
         WHERE "userId" = $1;`, [userId]);
-        console.log(urls)
+        
+        const ordemUrl= urls.rows.map((item) => {
+            return {
+                id:item.id,
+                shortUrl: item.short,
+                url: item.url,
+                visitCount: item.visitCount
+            }
+        })
 
         const visitCountTotal = await db.query(`SELECT SUM ("visitCount") 
         AS visit 
@@ -86,7 +94,7 @@ async function userMe (req, res) {
             id: usuario.rows[0].id,
             name: usuario.rows[0].name,
             visitCount: visitCountTotal.rows[0].visit,
-            shortenedUrls: urls.rows                            
+            shortenedUrls: ordemUrl                          
         })
         
     } catch (error) {
