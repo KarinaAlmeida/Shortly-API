@@ -20,6 +20,5 @@ server.listen(PORT, () => console.log(`Rodando na porta: ${PORT}`));
 
 server.use(userRoute)
 server.use(urlRoute)
-server.use(rankingRoute)
 
 

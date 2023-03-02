@@ -86,4 +86,5 @@ async function deleteUrl (req, res) {
     }
 };
 
+
 export {shorten, getUrlId, open, deleteUrl}

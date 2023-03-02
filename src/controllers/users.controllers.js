@@ -63,5 +63,34 @@ async function login (req,res){
 
 }
 
+async function userMe (req, res) {
+    const userId= res.locals.id;
 
-export {signUp, login}
+    try {
+        const urls = await db.query(`
+        SELECT url.id, url.short, url.url, url."visitCount"
+        FROM url 
+        WHERE userId = $1;`, [userId]);
+
+        const visitCountTotal = await db.query(`SELECT SUM("visitCount") 
+        AS visitTotal 
+        FROM url
+        WHERE userId = $1;`, [userId])
+
+        const usuario = await db.query(`SELECT * 
+        FROM users 
+        WHERE id=$1;`, [userId])
+
+        return res.status(200).send({
+            id: usuario.rows[0].id,
+            name: usuario.rows[0].name,
+            visitCount: visitCountTotal.rows[0].visitTotal,
+            shortenedUrls: urls.rows                            
+        })
+        
+    } catch (error) {
+        return res.status(500).send(error.message)
+
+    }
+}
+export {signUp, login, userMe}
