@@ -13,7 +13,7 @@ function validateAuth () {
         const sessaoAberta= await db.query (`SELECT * FROM sessions WHERE "userToken"=$1;`, [token])
  
   
-        if (sessaoAberta.rowCount===0) return res.status(401).send("Você não está logado! Entre antes de lançar dados!")
+        if (sessaoAberta.rowCount===0) return res.status(401).send("Você não está logado! Entre antes de usar as funções!")
 
         res.locals.id= sessaoAberta.rows[0].userId
         
@@ -38,3 +38,7 @@ function validateAuth () {
  }
 
  export {validateAuth, validateUrl}
+
+
+
+ 

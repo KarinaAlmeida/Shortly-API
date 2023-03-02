@@ -60,4 +60,19 @@ async function open (req, res) {
     }
 }
 
-export {shorten, getUrlId, open}
+async function deleteUrl (req, res) {
+    const id = req.params.id;
+
+    try {
+        await db.query(`
+            DELETE FROM url WHERE id = $1`, [id]);
+
+        return res.sendStatus(204);
+       
+
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+
+export {shorten, getUrlId, open, deleteUrl}
